@@ -38,7 +38,7 @@ Modulo para probar el cambio de odoo
 """,
     'demo': ['demo.xml'],
     'test': [],
-    'data': ['prueba_view.xml'],
+    'data': ['prueba_view.xml','partner.xml'],
     'installable': True,
     'auto_install': False,
 }
