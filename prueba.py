@@ -76,6 +76,7 @@ class Session(models.Model):
     duration = fields.Float(digits=(6, 2), help="Duration in days")
     seats = fields.Integer(string="Number of seats")
     active = fields.Boolean(default=True)
+    color = fields.Integer()
 
     instructor_id = fields.Many2one('res.partner', string="Instructor", domain=['|', ('instructor', '=', True), ('category_id.name', 'ilike', "Teacher")])
     course_id = fields.Many2one('openacademy.course', ondelete='cascade', string="Course", required=True)
@@ -84,6 +85,24 @@ class Session(models.Model):
     end_date = fields.Date(string="End Date", store=True, compute='_get_end_date', inverse='_set_end_date')
     hours = fields.Float(string="Duration in hours", compute='_get_hours', inverse='_set_hours')
     attendees_count = fields.Integer(string="Attendees count", compute='_get_attendees_count', store=True)
+    state = fields.Selection([
+    ('draft', "Draft"),
+    ('confirmed', "Confirmed"),
+    ('done', "Done"),
+    ])
+
+
+    @api.one
+    def action_draft(self):
+        self.state = 'draft'
+
+    @api.one
+    def action_confirm(self):
+        self.state = 'confirmed'
+
+    @api.one
+    def action_done(self):
+        self.state = 'done'
 
     @api.one
     @api.depends('seats', 'attendee_ids')
@@ -94,11 +113,18 @@ class Session(models.Model):
             self.taken_seats = 100.0 * len(self.attendee_ids) / self.seats
 
     @api.onchange('seats', 'attendee_ids')
-    def _very_valid_seats(self):
+    def _verify_valid_seats(self):
         if self.seats < 0:
             return {
                 'warning': {
                     'title': "Incorrect 'seats' value",
+                    'message': "The number of available seats may not be negative",
+                },
+            }
+        if self.seats < len(self.attendee_ids):
+            return {
+                'warning': {
+                    'title': "Too many attendees",
                     'message': "Increase seats or remove excess attendees",
                 },
             }
