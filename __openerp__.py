@@ -18,10 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-#    Proyecto:   GRP
+#    Proyecto:   Testing
 #    Fecha:      18/12/2014
-#    Autor:      Carolina Fernández
-#    Compañia:   Quanam - www.quanam.com
+#    Autor:      Felipe Ferreira
+#    Compañia:   Datamatic - www.datamatic.com.uy
 #    Adecuacion: GRP
 ##############################################################################
 
@@ -32,13 +32,21 @@
     'website': 'www.datamatic.com.uy',
     'category': 'Testing',
     'images': [],
-#    'depends': ['base','account'],
+    'depends': [],
     'description': """
 Modulo para probar el cambio de odoo
 """,
-    'demo': ['demo.xml'],
+    'demo': [
+        'demo.xml'
+        ],
     'test': [],
-    'data': ['prueba_view.xml','partner.xml','session_workflow.xml'],
+    'data': [
+        'prueba_view.xml',
+        'partner.xml',
+        'session_workflow.xml',
+        'security/security.xml',
+        'security/ir.model.access.csv',
+        ],
     'installable': True,
     'auto_install': False,
 }
